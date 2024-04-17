@@ -17,7 +17,7 @@ class RetrieveThenReadApproach(Approach):
     """
 
     system_chat_template = (
-        "You are an intelligent assistant helping Contoso Inc employees with their healthcare plan questions and employee handbook questions. "
+        "You are an intelligent assistant helping Atra employees with questions about data governance and their progress on Atra-provided study tracks. Be brief in your answers. "
         + "Use 'you' to refer to the individual asking the questions even if they ask with 'I'. "
         + "Answer the following question using only the data provided in the sources below. "
         + "For tabular information return it as an html table. Do not return markdown format. "
@@ -27,15 +27,15 @@ class RetrieveThenReadApproach(Approach):
 
     # shots/sample conversation
     question = """
-'What is the deductible for the employee plan for a visit to Overlake in Bellevue?'
+'What is data governance?'
 
 Sources:
-info1.txt: deductibles depend on whether you are in-network or out-of-network. In-network deductibles are $500 for employee and $1000 for family. Out-of-network deductibles are $1000 for employee and $2000 for family.
-info2.pdf: Overlake is in-network for the employee plan.
-info3.pdf: Overlake is the name of the area that includes a park and ride near Bellevue.
-info4.pdf: In-network institutions include Overlake, Swedish and others in the region
+info1.txt: Data governance is responsible for the operation and monitoring of data flows within a company. It is an activity that focuses the efforts of various areas on attention to data quality, security, and controls.
+info2.pdf: Data governance is the orchestration of people, policies, processes, and technology so that the company can ensure that data serves the necessary purposes for fulfilling the strategy, as well as preventing fines and legal proceedings that may occur due to mishandling of data.
+info3.pdf: Data governance is based on external factors, such as laws and regulations, but also internal factors, such as policies, standards, and processes. Another important foundation in data governance is people and applied technologies.
+info4.pdf: Data governance cannot be seen as a project. Data governance is a cyclical and continuous process. Without trained individuals and the understanding that the work needs to be constantly revisited, the activity does not yield the results that companies desire and always blame data governance for being inefficient.
 """
-    answer = "In-network deductibles are $500 for employee and $1000 for family [info1.txt] and Overlake is in-network for the employee plan [info2.pdf][info4.pdf]."
+    answer = "Data governance ensures data flows effectively, focusing on quality, security, and controls [info1.txt]. It orchestrates people, policies, processes, and technology to serve strategic purposes and prevent legal issues [info2.txt]. Based on external and internal factors, it's a continuous process requiring trained individuals [info3.txt][info4.txt]."
 
     def __init__(
         self,
@@ -83,8 +83,8 @@ info4.pdf: In-network institutions include Overlake, Swedish and others in the r
 
         use_semantic_captions = True if overrides.get("semantic_captions") and has_text else False
         top = overrides.get("top", 3)
-        minimum_search_score = overrides.get("minimum_search_score", 0.0)
-        minimum_reranker_score = overrides.get("minimum_reranker_score", 0.0)
+        minimum_search_score = overrides.get("minimum_search_score", 0.030)
+        minimum_reranker_score = overrides.get("minimum_reranker_score", 3.0)
         filter = self.build_filter(overrides, auth_claims)
         # If retrieval mode includes vectors, compute an embedding for the query
         vectors: list[VectorQuery] = []

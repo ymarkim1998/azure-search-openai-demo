@@ -21,18 +21,18 @@ class ChatApproach(Approach, ABC):
     ASSISTANT = "assistant"
 
     query_prompt_few_shots = [
-        {"role": USER, "content": "How did crypto do last year?"},
-        {"role": ASSISTANT, "content": "Summarize Cryptocurrency Market Dynamics from last year"},
-        {"role": USER, "content": "What are my health plans?"},
-        {"role": ASSISTANT, "content": "Show available health plans"},
+        {"role": USER, "content": "How are consultants progressing on the data governance knowledge track?"},
+        {"role": ASSISTANT, "content": "Summarize employees' progress on the data governance knowledge track"},
+        {"role": USER, "content": "What are the pillars of data governance?"},
+        {"role": ASSISTANT, "content": "Show the pillars of data governance"},
     ]
     NO_RESPONSE = "0"
 
     follow_up_questions_prompt_content = """Generate 3 very brief follow-up questions that the user would likely ask next.
     Enclose the follow-up questions in double angle brackets. Example:
-    <<Are there exclusions for prescriptions?>>
-    <<Which pharmacies can be ordered from?>>
-    <<What is the limit for over-the-counter medication?>>
+    <<What resources are available to help me improve my performance in the data governance study track?>>
+    <<How can I track my own progress?>>
+    <<What are the requirements for successfully completing the data governance study track?>>
     Do no repeat questions that have already been asked.
     Make sure the last question ends with ">>".
     """
