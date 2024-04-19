@@ -2,16 +2,12 @@ import { Example } from "./Example";
 
 import styles from "./Example.module.css";
 
-const DEFAULT_EXAMPLES: string[] = [
-    "O que é governança de dados?",
-    "Quais são os pilares da governança de dados?",
-    "O que faz um Data Steward?"
-];
+const DEFAULT_EXAMPLES: string[] = ["O que é governança de dados?", "Quais são os pilares da governança de dados?", "O que faz um Data Steward?"];
 
 const GPT4V_EXAMPLES: string[] = [
-    "Compare the impact of interest rates and GDP in financial markets.",
-    "What is the expected trend for the S&P 500 index over the next five years? Compare it to the past S&P 500 performance",
-    "Can you identify any correlation between oil prices and stock market trends?"
+    "Qual é a ordem de estudo recomendada para consultores de DG?",
+    "Qual é o valor da multa aplicada em empresas que descumprirem a GDPR?",
+    "Descreva sucintamente cada modelo de operação, listando seus prós e contras e em quais casos de uso se aplicam melhor"
 ];
 
 interface Props {
