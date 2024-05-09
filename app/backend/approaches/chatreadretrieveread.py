@@ -52,6 +52,8 @@ class ChatReadRetrieveReadApproach(ChatApproach):
         self.query_speller = query_speller
         self.chatgpt_token_limit = get_token_limit(chatgpt_model)
 
+
+    #informar ao bot como interpretar a conversa.
     @property
     def system_message_chat_conversation(self):
         return """Assistant helps Atra employees with questions about data governance and their progress on Atra-provided study tracks. Be brief in your answers. Additionally, you will assist employees with questions about contract law

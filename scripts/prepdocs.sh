@@ -77,6 +77,10 @@ $searchAnalyzerNameArg $searchSecretNameArg \
 --openaiservice "$AZURE_OPENAI_SERVICE" --openaideployment "$AZURE_OPENAI_EMB_DEPLOYMENT"  \
 --openaikey "$OPENAI_API_KEY" --openaiorg "$OPENAI_ORGANIZATION" \
 --documentintelligenceservice "$AZURE_DOCUMENTINTELLIGENCE_SERVICE" \
+--datalakekey "$AZURE_ADLS_GEN2_KEY" \
+--onelakeaccountname "$FABRIC_ACCOUNT_NAME" \
+--onelakeworkspacename "$FABRIC_WORKSPACE_NAME" \
+--onelakepath "$FABRIC_DATA_PATH" \
 $searchImagesArg $visionEndpointArg \
 $adlsGen2StorageAccountArg $adlsGen2FilesystemArg $adlsGen2FilesystemPathArg \
 $tenantArg $aclArg \

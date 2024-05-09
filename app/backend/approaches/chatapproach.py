@@ -30,6 +30,7 @@ class ChatApproach(Approach, ABC):
     ]
     NO_RESPONSE = "0"
 
+    #Perguntas de acompanhamento
     follow_up_questions_prompt_content = """Generate 3 very brief follow-up questions that the user would likely ask next.
     Enclose the follow-up questions in double angle brackets. Example:
     <<What resources are available to help me improve my performance in the data governance study track?>>

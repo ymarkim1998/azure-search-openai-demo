@@ -25,6 +25,7 @@ from prepdocslib.listfilestrategy import (
     ADLSGen2ListFileStrategy,
     ListFileStrategy,
     LocalListFileStrategy,
+    OneLakeListFileStrategy
 )
 from prepdocslib.parser import Parser
 from prepdocslib.pdfparser import DocumentAnalysisParser, LocalPdfParser
@@ -95,9 +96,23 @@ def setup_list_file_strategy(
     datalake_filesystem: Union[str, None],
     datalake_path: Union[str, None],
     datalake_key: Union[str, None],
+    one_lake_account_name: Union[str, None],
+    one_lake_workespace_name: Union[str, None],
+    one_lake_data_path: Union[str, None]
 ):
     list_file_strategy: ListFileStrategy
-    if datalake_storage_account:
+    if one_lake_account_name:
+        if one_lake_workespace_name is None or one_lake_data_path is None:
+            raise ValueError("OneLake workspace name and data path are required when using Fabric OneLake")
+        lake_credential: Union[AsyncTokenCredential, str] = azure_credential
+        logger.info("Using OneLake: %s", one_lake_workespace_name)
+        list_file_strategy = OneLakeListFileStrategy(
+            one_lake_account_name=one_lake_account_name,
+            one_lake_workespace_name=one_lake_workespace_name,
+            one_lake_data_path=one_lake_data_path,
+            credential=lake_credential
+        )
+    elif datalake_storage_account:
         if datalake_filesystem is None or datalake_path is None:
             raise ValueError("DataLake file system and path are required when using Azure Data Lake Gen2")
         adls_gen2_creds: Union[AsyncTokenCredential, str] = azure_credential if datalake_key is None else datalake_key
@@ -251,6 +266,19 @@ if __name__ == "__main__":
     parser.add_argument(
         "--useacls", action="store_true", help="Store ACLs from Azure Data Lake Gen2 Filesystem in the search index"
     )
+
+    parser.add_argument(
+        "--onelakeaccountname", required=False, help="Nome da conta do Microsoft Fabric"
+    )
+
+    parser.add_argument(
+        "--onelakeworkspacename", required=False, help="Nome do workspace do Microsoft Fabric"
+    )
+
+    parser.add_argument(
+        "--onelakepath", required=False, help="Localização dos arquivos dentro do OneLake a serem indexados"
+    )
+
     parser.add_argument(
         "--category", help="Value for the category field in the search index for all sections indexed in this run"
     )
@@ -383,6 +411,8 @@ if __name__ == "__main__":
         required=False,
         help="Required if --useintvectorization is specified. Enable Integrated vectorizer indexer support which is in preview)",
     )
+
+    
     parser.add_argument("--verbose", "-v", action="store_true", help="Verbose output")
     args = parser.parse_args()
 
@@ -437,6 +467,9 @@ if __name__ == "__main__":
         datalake_filesystem=args.datalakefilesystem,
         datalake_path=args.datalakepath,
         datalake_key=clean_key_if_exists(args.datalakekey),
+        one_lake_account_name=args.onelakeaccountname,
+        one_lake_workespace_name=args.onelakeworkspacename,
+        one_lake_data_path=args.onelakepath
     )
     openai_embeddings_service = setup_embeddings_service(
         azure_credential=azd_credential,

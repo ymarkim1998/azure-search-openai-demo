@@ -174,3 +174,48 @@ class ADLSGen2ListFileStrategy(ListFileStrategy):
                         os.remove(temp_file_path)
                     except Exception as file_delete_exception:
                         logger.error(f"\tGot an error while deleting {temp_file_path} -> {file_delete_exception}")
+
+
+class OneLakeListFileStrategy(ListFileStrategy):
+    """
+    Estratégia para listar arquivos localizados em OneLake do Fabric
+    """
+    def __init__(
+        self,
+        one_lake_account_name: str,
+        one_lake_workespace_name: str,
+        one_lake_data_path: str,
+        credential: Union[AsyncTokenCredential, str],
+    ):
+        self.one_lake_account_name = one_lake_account_name
+        self.one_lake_workespace_name = one_lake_workespace_name
+        self.one_lake_data_path = one_lake_data_path
+        self.credential = credential
+
+    async def list_paths(self) -> AsyncGenerator[str, None]:
+        async with DataLakeServiceClient(
+            account_url=f"https://{self.one_lake_account_name}.dfs.fabric.microsoft.com", credential=self.credential
+        ) as service_client, service_client.get_file_system_client(self.one_lake_workespace_name) as filesystem_client:
+            async for path in filesystem_client.get_paths(path=self.one_lake_data_path, recursive=True):
+                if path.is_directory:
+                    continue
+                yield path.name
+    
+    async def list(self) -> AsyncGenerator[File, None]:
+        async with DataLakeServiceClient(
+            account_url = f"https://{self.one_lake_account_name}.dfs.fabric.microsoft.com", credential=self.credential
+        ) as service_client, service_client.get_file_system_client(self.one_lake_workespace_name) as filesystem_client:
+            async for path in self.list_paths():
+                temp_file_path = os.path.join(tempfile.gettempdir(), os.path.basename(path))
+                try:
+                    async with filesystem_client.get_file_client(path) as file_client:
+                        with open(temp_file_path, "wb") as temp_file:
+                            downloader = await file_client.download_file()
+                            await downloader.readinto(temp_file)                    
+                    yield File(content=open(temp_file_path, "rb"))
+                except Exception as one_lake_exeption:
+                    logger.error(f"\tGot an error while reading {path} -> {one_lake_exeption} --> skipping file")
+                    try:
+                        os.remove(temp_file_path)
+                    except Exception as file_delete_exception:
+                        logger.error(f"\tGot an error while deleting {temp_file_path} --> {file_delete_exception}")

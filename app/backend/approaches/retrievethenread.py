@@ -25,7 +25,6 @@ class RetrieveThenReadApproach(Approach):
         + "If you cannot answer using the sources below, say you don't know. Use below example to answer"
     )
 
-    # shots/sample conversation
     question = """
 'What is data governance?'
 
